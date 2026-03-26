@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { GoogleUser, signInWithGoogle, signOutGoogle } from "@/lib/google-auth";
 import LoginScreen from "@/components/LoginScreen";
 import HomeScreen from "@/components/HomeScreen";
