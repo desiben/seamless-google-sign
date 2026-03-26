@@ -23,7 +23,7 @@ export interface GoogleUser {
  */
 export function initGoogleAuth() {
   GoogleAuth.initialize({
-    clientId: 'YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com',
+    clientId: '614452950315-0l85p6q2ungg47er37bv70ui44fuq1rg.apps.googleusercontent.com',
     scopes: ['profile', 'email'],
     grantOfflineAccess: true,
   });
