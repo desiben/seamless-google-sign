@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { GoogleUser, signInWithGoogle, signOutGoogle } from "@/lib/google-auth";
 import LoginScreen from "@/components/LoginScreen";
 import HomeScreen from "@/components/HomeScreen";
@@ -12,6 +13,7 @@ const Index = () => {
     setLoading(true);
     setError(null);
     try {
+      await Haptics.impact({ style: ImpactStyle.Medium });
       const result = await signInWithGoogle();
       setUser(result);
     } catch (err: any) {
