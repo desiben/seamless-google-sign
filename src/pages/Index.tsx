@@ -13,6 +13,7 @@ const Index = () => {
     setLoading(true);
     setError(null);
     try {
+      await Haptics.impact({ style: ImpactStyle.Medium });
       const result = await signInWithGoogle();
       setUser(result);
     } catch (err: any) {
