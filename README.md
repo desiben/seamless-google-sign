@@ -36,16 +36,86 @@ npm install
 npm run dev
 ```
 
-### 4. Build & run on a device
+### 4. Build & run on Android
+
+#### Prerequisites
+- [Android Studio](https://developer.android.com/studio) installed
+- Android SDK (installed via Android Studio)
+- A physical Android device with USB debugging enabled, **or** an Android emulator
+- Java 17+ (bundled with recent Android Studio versions)
+
+#### Steps
 
 ```bash
+# 1. Build the web app
 npm run build
-npx cap add android   # or: npx cap add ios
-npx cap sync
-npx cap run android   # or: npx cap run ios
+
+# 2. Add the Android platform (first time only)
+npx cap add android
+
+# 3. Sync web assets + plugins to the native project
+npx cap sync android
+
+# 4. Open in Android Studio
+npx cap open android
 ```
 
-> **Android** requires Android Studio. **iOS** requires a Mac with Xcode.
+Then in **Android Studio**:
+1. Wait for Gradle sync to finish
+2. Connect your phone via USB (or start an emulator)
+3. Click the **Run ▶** button (or `Shift + F10`)
+4. The app installs and launches on your device
+
+> **Every time you change web code**, re-run:
+> ```bash
+> npm run build && npx cap sync android
+> ```
+
+#### Enable USB debugging on your phone
+1. Go to **Settings → About phone**
+2. Tap **Build number** 7 times to unlock Developer options
+3. Go to **Settings → Developer options → USB debugging** → enable it
+4. When you plug in your phone, tap **Allow** on the USB debugging prompt
+
+### 5. Build & run on iOS
+
+#### Prerequisites
+- A Mac with [Xcode](https://apps.apple.com/app/xcode/id497799835) installed (v14+)
+- CocoaPods (`sudo gem install cocoapods`)
+- An Apple Developer account (free works for personal device testing)
+
+#### Steps
+
+```bash
+# 1. Build the web app
+npm run build
+
+# 2. Add the iOS platform (first time only)
+npx cap add ios
+
+# 3. Sync web assets + plugins to the native project
+npx cap sync ios
+
+# 4. Open in Xcode
+npx cap open ios
+```
+
+Then in **Xcode**:
+1. Select your connected device (or a simulator) from the device dropdown
+2. Set your **Signing Team** under the target's "Signing & Capabilities" tab
+3. Click the **Run ▶** button (`Cmd + R`)
+
+> For the Google Sign-In plugin on iOS, add your **reversed iOS client ID** as a URL scheme in `Info.plist`.
+
+### 6. Common post-pull workflow
+
+After every `git pull` or dependency change:
+
+```bash
+npm install
+npm run build
+npx cap sync          # syncs BOTH android and ios if present
+```
 
 ## Expected Behavior
 
