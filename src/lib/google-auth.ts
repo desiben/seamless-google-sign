@@ -1,4 +1,5 @@
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface GoogleUser {
   email: string;
@@ -12,14 +13,6 @@ export interface GoogleUser {
 /**
  * Initialize Google Auth plugin.
  * Call this once on app startup (e.g., in main.tsx or App.tsx).
- * 
- * IMPORTANT: Replace the clientId below with your own Google OAuth Client ID
- * from the Google Cloud Console (https://console.cloud.google.com/apis/credentials).
- * 
- * You need:
- * - A Web client ID (for web/PWA)
- * - An Android client ID (for Android builds)
- * - An iOS client ID (for iOS builds, also set in capacitor.config.ts)
  */
 export function initGoogleAuth() {
   GoogleAuth.initialize({
@@ -29,13 +22,34 @@ export function initGoogleAuth() {
   });
 }
 
+/**
+ * Sign in using the native Google Auth plugin, then exchange the
+ * Google ID token with Supabase so the session stays in-app
+ * (no external browser window).
+ */
 export async function signInWithGoogle(): Promise<GoogleUser> {
-  const result = await GoogleAuth.signIn();
-  return result as unknown as GoogleUser;
+  // 1. Native sign-in → returns Google profile + tokens
+  const googleUser = await GoogleAuth.signIn();
+
+  // 2. Exchange the Google ID token with Supabase Auth
+  const idToken = (googleUser as any).authentication?.idToken;
+  if (idToken) {
+    const { error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: idToken,
+    });
+    if (error) {
+      console.error('Supabase signInWithIdToken error:', error);
+      throw error;
+    }
+  }
+
+  return googleUser as unknown as GoogleUser;
 }
 
 export async function signOutGoogle(): Promise<void> {
   await GoogleAuth.signOut();
+  await supabase.auth.signOut();
 }
 
 export async function refreshGoogleToken(): Promise<{ accessToken: string }> {
