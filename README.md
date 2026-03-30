@@ -2,6 +2,12 @@
 
 A test application to verify that Google Sign-In stays **within the app** (native dialog) and does not open an external browser window when wrapped in Capacitor.
 
+## Screenshot
+
+<p align="center">
+  <img src="public/screenshot-mobile.png" alt="Login screen — mobile view" width="300" />
+</p>
+
 ## Purpose
 
 This app exists to validate one thing: when packaged as a native mobile app using Capacitor, pressing "Continue with Google" triggers the **native Google Sign-In overlay** — not a redirect to an external browser.
